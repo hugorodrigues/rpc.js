@@ -1,0 +1,214 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Rpc.js by hugorodrigues</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Rpc.js</h1>
+        <p>Elegant JSON-RPC for node.js</p>
+        <p class="view"><a href="https://github.com/hugorodrigues/rpc.js">View the Project on GitHub <small>hugorodrigues/rpc.js</small></a></p>
+        <ul>
+          <li><a href="https://github.com/hugorodrigues/rpc.js/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/hugorodrigues/rpc.js/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/hugorodrigues/rpc.js">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p><img src="http://i.imgur.com/DNNlN.png" width="800" border="0"></p>
+
+<p>rpc.js is a simple and lightweight JSON-RPC gateway for Node.JS.</p>
+
+<p>You can use it standalone (without any dependecy) or integrate in your favorite framework (tested with flatiron and express)</p>
+
+<h2>Main Features</h2>
+
+<ul>
+<li>Simple, lightweight and fast</li>
+<li>Schema based</li>
+<li>Auto API documentation and interactive tests</li>
+</ul><h2>Try it now!</h2>
+
+<div class="highlight">
+<pre>git clone https://hugorodrigues@github.com/hugorodrigues/rpc.js.git
+<span class="nb">cd </span>rpc.js/examples/standalone
+node example.js
+</pre>
+</div>
+
+
+<p>Goto http://localhost:3000/help.html</p>
+
+<h2>Declaring Methods</h2>
+
+<p><strong>Method declaration structure</strong></p>
+
+<div class="highlight">
+<pre><span class="nx">methodName</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">info</span><span class="o">:</span> <span class="s1">'Description of your method'</span><span class="p">,</span>
+    <span class="nx">params</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">paramFoo</span><span class="o">:</span> <span class="p">{</span> <span class="nx">required</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">type</span><span class="o">:</span> <span class="s1">'number'</span><span class="p">,</span> <span class="nx">info</span><span class="o">:</span> <span class="s1">'Description of paramFoo'</span><span class="p">},</span>
+        <span class="nx">paramBar</span><span class="o">:</span> <span class="p">{</span> <span class="nx">required</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span> <span class="nx">type</span><span class="o">:</span> <span class="s1">'string'</span><span class="p">,</span> <span class="nx">info</span><span class="o">:</span> <span class="s1">'Description of paramBar'</span><span class="p">}</span>
+    <span class="p">},</span>
+    <span class="nx">action</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">params</span><span class="p">,</span><span class="nx">output</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Do your stuff here</span>
+        <span class="c1">// You can use the params: params.paramFoo params.paramBar</span>
+        <span class="c1">// When ready output with: output.win(result);</span>
+
+    <span class="p">}</span>
+<span class="p">},</span>
+</pre>
+</div>
+
+
+<p><strong>Example method that sum two numbers:</strong></p>
+
+<div class="highlight">
+<pre><span class="nx">sum</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">info</span><span class="o">:</span> <span class="s1">'Sum two numbers'</span><span class="p">,</span>
+    <span class="nx">params</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">x</span><span class="o">:</span> <span class="p">{</span> <span class="nx">required</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">type</span><span class="o">:</span> <span class="s1">'number'</span><span class="p">,</span> <span class="nx">info</span><span class="o">:</span> <span class="s1">'X value'</span><span class="p">},</span>
+        <span class="nx">y</span><span class="o">:</span> <span class="p">{</span> <span class="nx">required</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">type</span><span class="o">:</span> <span class="s1">'number'</span><span class="p">,</span> <span class="nx">info</span><span class="o">:</span> <span class="s1">'Y value'</span><span class="p">}</span>
+    <span class="p">},</span>
+    <span class="nx">action</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">params</span><span class="p">,</span><span class="nx">output</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">x</span><span class="p">)</span> <span class="o">+</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
+        <span class="nx">output</span><span class="p">.</span><span class="nx">win</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">},</span>
+</pre>
+</div>
+
+
+<h2>Output</h2>
+
+<p>When coding inside the action you can output successful responses:</p>
+
+<div class="highlight">
+<pre><span class="nx">output</span><span class="p">.</span><span class="nx">win</span><span class="p">(</span><span class="s2">"Hello World"</span><span class="p">);</span>
+</pre>
+</div>
+
+
+<p>Or error outputs:</p>
+
+<div class="highlight">
+<pre> <span class="nx">output</span><span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="mi">403</span><span class="p">,</span> <span class="s2">"Invalid API Key"</span><span class="p">);</span>
+</pre>
+</div>
+
+
+<h2>Full Example</h2>
+
+<p>Check the file /examples/example.schema.js for the schema used in the demo API and Screenshot</p>
+
+<h2>Example using with Flatiron</h2>
+
+<div class="highlight">
+<pre>
+<span class="kd">var</span> <span class="nx">flatiron</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'flatiron'</span><span class="p">),</span>
+    <span class="nx">app</span> <span class="o">=</span> <span class="nx">flatiron</span><span class="p">.</span><span class="nx">app</span><span class="p">;</span>
+
+
+<span class="c1">// include rpc.js</span>
+<span class="kd">var</span> <span class="nx">rpc</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'../../rpc.js'</span><span class="p">);</span>
+<span class="nx">rpc</span><span class="p">.</span><span class="nx">schema</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'../example.schema.js'</span><span class="p">);</span>
+
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">flatiron</span><span class="p">.</span><span class="nx">plugins</span><span class="p">.</span><span class="nx">http</span><span class="p">);</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Send request to rpc.js</span>
+    <span class="nx">rpc</span><span class="p">.</span><span class="nx">input</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">rpc</span><span class="p">,</span><span class="k">this</span><span class="p">.</span><span class="nx">res</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="c1">// Serv UI static file</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'/help.html'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">).</span><span class="nx">readFile</span><span class="p">(</span><span class="s2">"../../ui/help.html"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">content</span><span class="p">)</span> <span class="p">{</span> <span class="nx">self</span><span class="p">.</span><span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span> <span class="s1">'Content-Type'</span><span class="o">:</span> <span class="s1">'text/html'</span> <span class="p">});</span> <span class="nx">self</span><span class="p">.</span><span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nx">content</span><span class="p">,</span> <span class="s1">'utf-8'</span><span class="p">);</span> <span class="p">});</span>
+<span class="p">});</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span>
+
+</pre>
+</div>
+
+
+<h2>Example using with Express</h2>
+
+<div class="highlight">
+<pre>
+ <span class="c1">// include rpc.js</span>
+<span class="kd">var</span> <span class="nx">rpc</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'rpc.js'</span><span class="p">);</span>
+
+<span class="c1">// load your API schema</span>
+<span class="nx">rpc</span><span class="p">.</span><span class="nx">schema</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'yourApi.schema.js'</span><span class="p">);</span>
+
+ <span class="c1">// include express</span>
+<span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'express'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">express</span><span class="p">.</span><span class="nx">createServer</span><span class="p">();</span>
+
+<span class="c1">// Express Configuration</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">configure</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">bodyParser</span><span class="p">());</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="kr">static</span><span class="p">(</span><span class="s1">'../../ui/'</span><span class="p">));</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">errorHandler</span><span class="p">());</span> 
+<span class="p">});</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">){</span>
+    <span class="c1">// Send request to rpc.js</span>
+    <span class="nx">rpc</span><span class="p">.</span><span class="nx">input</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">rpc</span><span class="p">,</span><span class="nx">res</span><span class="p">);</span>  
+<span class="p">});</span>
+
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Express server listening on port %d in %s mode"</span><span class="p">,</span> <span class="nx">app</span><span class="p">.</span><span class="nx">address</span><span class="p">().</span><span class="nx">port</span><span class="p">,</span> <span class="nx">app</span><span class="p">.</span><span class="nx">settings</span><span class="p">.</span><span class="nx">env</span><span class="p">);</span>
+
+</pre>
+</div>
+
+
+<h2>License</h2>
+
+<p>(The MIT License)</p>
+
+<p>Copyright (c) 2012, Hugo Rodrigues <a href="mailto:correio@hugorodrigues.com">correio@hugorodrigues.com</a></p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/hugorodrigues">hugorodrigues</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
