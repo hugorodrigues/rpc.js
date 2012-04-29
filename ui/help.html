@@ -386,7 +386,7 @@
 
         <script type="text/html" rows="0" cols="0" style="display:none;" id="tplMenu">
             {#foreach $T.data.groups as group}
-
+<div style="margin-left:10px;">
             <h2 style="margin-top: 25px;">{$T.group.name}</h2>
             <div style="font-size: 11px;">{$T.group.info}</div>
             <ul style="margin-top: 5px;">
@@ -395,7 +395,8 @@
                 <li><a href="#{$T.method$key}">{$T.method$key} </a></li>
                 {#/if}
                 {#/for}
-            </ul>            
+            </ul>
+</div>
             {#/for}
         </script>
 

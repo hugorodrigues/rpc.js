@@ -4,7 +4,7 @@ module.exports = {
 	// Groups - Used to categorize your methods
     groups: {
         math: {
-            name: 'Calculatios',
+            name: 'Math',
             info: 'Some example math methods',
         },
         util: {
@@ -21,7 +21,7 @@ module.exports = {
 
 
 		sum: {
-			info: 'Sum two numbers',
+			info: 'Adding two numbers',
 			group: 'math',
 			params: {
 				x: { required: true, type: 'number', info: 'X value'},
@@ -51,7 +51,7 @@ module.exports = {
 
 
 		division: {
-			info: 'Divide numbers',
+			info: 'Divide two numbers',
 			group: 'math',
 			params: {
 				a: { required: true, type: 'number', info: 'A value'},
@@ -66,7 +66,7 @@ module.exports = {
 
 
 		multiply: {
-			info: 'Multiply numbers',
+			info: 'Multiply two numbers',
 			group: 'math',
 			params: {
 				b: { required: true, type: 'number', info: 'B value'},
