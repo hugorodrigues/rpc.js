@@ -1,0 +1,131 @@
+# rpc.js
+
+rpc.js is a simple and lightweight JSON-RPC gateway for  Node.JS
+
+You can use it standalone (without any dependecy) or integrate in your favorite framework (tested with flatiron and express)
+
+
+## Schema based
+
+**Example method declaration**
+
+```js
+		methodName: {
+			info: 'Description of your method',
+			params: {
+				paramFoo: { required: true, type: 'number', info: 'Description of paramFoo'},
+				paramBar: { required: false, type: 'string', info: 'Description of paramBar'}
+			},
+			action: function(params,output)
+			{
+				// Do your stuff here
+				// You can use the params: params.paramFoo params.paramBar
+
+				// 
+			}
+		},
+```
+
+**Example for a method that sum two numbers:**
+
+```js
+		sum: {
+			info: 'Sum two numbers',
+			params: {
+				x: { required: true, type: 'number', info: 'X value'},
+				y: { required: true, type: 'number', info: 'Y value'}
+			},
+			action: function(params,output)
+			{
+				var result = parseInt(params.x) + parseInt(params.y);
+				output.win(result);
+			}
+		},
+```
+
+## Inside action
+
+output.win(Response);
+
+Ex: output.win("Hello World");
+
+output.fail(errorCode,errorMsg);
+
+Ex: output.fail(500, "Invalid API Key");
+
+
+## Sample Schema
+
+There are 
+rpc.input(jsonStringFromRequest);
+
+
+
+## How to Install
+
+```bash
+npm install rpc.js
+```
+
+
+
+
+## Using Express
+
+```js
+
+ // include rpc.js
+var rpc = require('rpc.js');
+
+// load your API schema
+rpc.schema = require('yourApi.schema.js');
+
+ // include express
+var express = require('express');
+var app = module.exports = express.createServer();
+
+// Express Configuration
+app.configure(function(){
+  app.use(express.bodyParser());
+  app.use(express.static('../../ui/'));
+  app.use(express.errorHandler()); 
+});
+
+app.post('/', function(req, res){
+	// Send request to rpc.js
+	rpc.input(req.body.rpc,res);  
+});
+
+
+app.listen(3000);
+console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+
+```
+
+
+
+
+
+## License 
+
+(The MIT License)
+
+Copyright (c) 2012, Hugo Rodrigues <correio@hugorodrigues.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
