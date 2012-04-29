@@ -1,62 +1,81 @@
 # rpc.js
 
-rpc.js is a simple and lightweight JSON-RPC gateway for  Node.JS
+rpc.js is a simple and lightweight JSON-RPC server, gateway and doc for Node.JS
 
 You can use it standalone (without any dependecy) or integrate in your favorite framework (tested with flatiron and express)
 
 <img src="http://i.imgur.com/LYaZk.png" width="800" border = "0"/>
 
-## Schema based
+## Main Features
+- Simple, lightweight and fast
+- Schema based
+- Auto API documentator and interactive tests
 
-**Example method declaration**
+
+## Try it now!
+
+```bash
+git clone https://hugorodrigues@github.com/hugorodrigues/rpc.js.git
+cd rpc.js/examples/standalone
+node example.js
+```
+Goto http://localhost:3000/help.html
+
+
+
+
+
+## Declaring Methods
+
+**Method declaration structure**
 
 ```js
-		methodName: {
-			info: 'Description of your method',
-			params: {
-				paramFoo: { required: true, type: 'number', info: 'Description of paramFoo'},
-				paramBar: { required: false, type: 'string', info: 'Description of paramBar'}
-			},
-			action: function(params,output)
-			{
-				// Do your stuff here
-				// You can use the params: params.paramFoo params.paramBar
-				// When ready output with: output.win(result);
+methodName: {
+	info: 'Description of your method',
+	params: {
+		paramFoo: { required: true, type: 'number', info: 'Description of paramFoo'},
+		paramBar: { required: false, type: 'string', info: 'Description of paramBar'}
+	},
+	action: function(params,output)
+	{
+		// Do your stuff here
+		// You can use the params: params.paramFoo params.paramBar
+		// When ready output with: output.win(result);
 
-			}
-		},
+	}
+},
 ```
 
-**Example for a method that sum two numbers:**
+**Example method that sum two numbers:**
 
 ```js
-		sum: {
-			info: 'Sum two numbers',
-			params: {
-				x: { required: true, type: 'number', info: 'X value'},
-				y: { required: true, type: 'number', info: 'Y value'}
-			},
-			action: function(params,output)
-			{
-				var result = parseInt(params.x) + parseInt(params.y);
-				output.win(result);
-			}
-		},
+sum: {
+	info: 'Sum two numbers',
+	params: {
+		x: { required: true, type: 'number', info: 'X value'},
+		y: { required: true, type: 'number', info: 'Y value'}
+	},
+	action: function(params,output)
+	{
+		var result = parseInt(params.x) + parseInt(params.y);
+		output.win(result);
+	}
+},
 ```
 
-## Inside action
+## Output
 
-output.win(Response);
+When coding inside the action you can output successful responses:
 ```js
 output.win("Hello World");
 ```
-
-output.fail(errorCode,errorMsg);
+Or error outputs:
 ```js
- output.fail(500, "Invalid API Key");
+ output.fail(403, "Invalid API Key");
 ```
 
-## Sample Schema
+
+## Demo API
 
 ```js
 {
@@ -176,6 +195,8 @@ output.fail(errorCode,errorMsg);
 }
 ```
 
+
+
 ## How to Install
 
 ```bash
@@ -213,9 +234,6 @@ app.router.get('/help.html', function () {
 app.start(3000);
 
 ```
-
-
-
 
 
 
