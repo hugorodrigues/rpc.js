@@ -6,7 +6,7 @@
 
 // include rpc.js
 var rpc = require('../../rpc.js');
-
+var qs = require('querystring');
 // load your API schema
 rpc.schema = require('../example.schema.js');
 
@@ -29,9 +29,9 @@ require('http').createServer(function (request, res) {
 	    });
 
 	    request.addListener("end", function() {
-
+	    	var post = qs.parse(postData);
 		  // Send all requests to rpc.js
-	      rpc.input(postData,res); 
+	      rpc.input(post.rpc,res); 
 
 	    });
 

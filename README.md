@@ -4,7 +4,7 @@ rpc.js is a simple and lightweight JSON-RPC gateway for  Node.JS
 
 You can use it standalone (without any dependecy) or integrate in your favorite framework (tested with flatiron and express)
 
-<img src="http://i.imgur.com/LYaZk.png" width="500" border = "0"/>
+<img src="http://i.imgur.com/LYaZk.png" width="800" border = "0"/>
 
 ## Schema based
 
