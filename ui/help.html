@@ -338,7 +338,7 @@
                     params: result
                 }
                 
-                return "curl -i -X POST -d '"+JSON.stringify(tmp)+"' "+location.protocol+"//"+location.host+"/";
+                return "curl -i -X POST -d rpc='"+JSON.stringify(tmp)+"' "+location.protocol+"//"+location.host+"/";
             }
             
             
