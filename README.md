@@ -11,8 +11,8 @@ You can use it standalone (without any dependecy) or integrate in your favorite 
 - Minimal implementation
 - Schema based
 - Integrates great with any framework
-- Auto API documentation and interactive testing for free
-- It automaticaly validates required params
+- Auto API documentation and interactive testing
+- Automaticaly validates required params
 
 
 

@@ -94,22 +94,7 @@ module.exports = {
 					output.fail(500,'The param "name" should be "World"');
 
 			}
-		},
-
-
-
-		// This method return your API schema/catalog
-		// Used to generate the UI - You can delete if you don't use it
-		getApiSchema: {
-			info: 'Return API Schema',
-			group: 'util',
-			params: { },
-			action: function(params,output)
-			{
-				output.schema();
-			}
-		}		
-
+		}
 
 	}
 

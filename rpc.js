@@ -62,6 +62,10 @@ var rpc = {
 			return this.outputError(serverRequest,{}, -32600);
 		}
 
+		// If method is getApiSchema and Api Doc is on serv the schema
+		if (input.method == 'getApiSchema' && this.docOn == true)
+			return this.returnSchema(serverRequest, input, '');
+
 		// validate input method
 		if (input.method == '' || this.schema.methods[input.method] == undefined)
 			return this.outputError(serverRequest, input, -32601);
@@ -70,6 +74,7 @@ var rpc = {
 		for (param in this.schema.methods[input.method].params)
 			if (this.schema.methods[input.method].params[param].required == true && (input.params == undefined || input.params[param] == undefined || input.params[param] == ''))
 				return this.outputError(serverRequest, input, -32602);
+
 
 		var self = this;
 
@@ -179,7 +184,7 @@ var rpc = {
 
 
 		}).listen(port, bindAdress);
-		
+
 		console.log('RPC.js Server running on '+bindAdress+':'+port);
 		console.log('RPC.js Api documentation: http://'+bindAdress+':'+port+self.docUrl);
 	}
