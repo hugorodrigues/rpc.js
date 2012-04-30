@@ -16,17 +16,14 @@ You can use it standalone (without any dependecy) or integrate in your favorite 
 
 
 
-## Try it now!
+## Try a demo
 
 ```bash
 git clone https://hugorodrigues@github.com/hugorodrigues/rpc.js.git
 cd rpc.js/examples/standalone
 node example.js
 ```
-Goto http://127.0.0.1:3000/help
-
-
-
+Open your browser: http://127.0.0.1:3000/help
 
 
 ## How it works
@@ -66,9 +63,6 @@ sum: {
 		output.win(result);
 	}
 },
-```
-
-
 ```
 
 
@@ -141,7 +135,7 @@ rpc.server(3000, '127.0.0.1');
 
 ## Full schema example
 
-Check the file /examples/example.schema.js for the schema used in the demo API and Screenshot
+Check the file /examples/example.schema.js for the schema used in the demo and Screenshot's
 
 
 ## Output
@@ -152,7 +146,7 @@ output.win("Hello World");
 ```
 Or error outputs:
 ```js
- output.fail(403, "Invalid API Key");
+ output.fail(500, "You error Message");
 
 
 
