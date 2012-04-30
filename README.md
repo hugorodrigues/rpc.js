@@ -26,6 +26,8 @@ node example.js
 Open your browser: http://127.0.0.1:3000/help
 
 
+
+
 ## How it works
 You simply define your methods and set the params.
 
@@ -135,12 +137,16 @@ rpc.schema =  {
 rpc.server(3000, '127.0.0.1');
 ```
 
-When the server is running you can open http://127.0.0.1:3000 to view the documenation and start (interactive) testing your API.
+When the server is running you can open http://127.0.0.1:3000/help to view the documenation and start (interactive) testing your API.
+
+
 
 
 ## Full schema example
 
 Check the file /examples/example.schema.js for the schema used in the demo and Screenshot's
+
+
 
 
 ## Output
@@ -155,11 +161,12 @@ Or error outputs:
 ```
 
 
+
+
 ## Using with Flatiron.js
 
 ```js
 ...
-
 // include rpc.js
 var rpc = require('rpc.js');
 rpc.schema = require('./yourApiSchema.js');
@@ -169,9 +176,7 @@ app.router.post('/', function () {
 	// Send request to rpc.js
 	rpc.input(this.req.body.rpc,this.res);
 });
-
 ...
-
 ```
 Check/run /examples/flatiron for a full working example using flatiron
 
@@ -183,7 +188,6 @@ Check/run /examples/flatiron for a full working example using flatiron
 
 ```js
 ...
-
  // include rpc.js
 var rpc = require('rpc.js');
 rpc.schema = require('./yourApiSchema.js');
@@ -192,15 +196,18 @@ app.post('/', function(req, res){
 	// Send request to rpc.js
 	rpc.input(req.body.rpc,res);  
 });
-
 ...
 ```
 Check/run /examples/express for a full working example using express.js
 
 
+
+
 ## Inspiration
 The auto ui/documentation was inspired by webservice.js by Marak Squires
 https://github.com/Marak/webservice.js 
+
+
 
 
 ## License 
