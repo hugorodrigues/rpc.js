@@ -8,8 +8,12 @@ You can use it standalone (without any dependecy) or integrate in your favorite 
 
 ## Main Features
 - Simple, lightweight and fast
+- Minimal implementation
 - Schema based
-- Auto API documentator and interactive tests
+- Integrates great with any framework
+- Auto API documentation and interactive testing for free
+- It automaticaly validates required params
+
 
 
 ## Try it now!
@@ -19,13 +23,14 @@ git clone https://hugorodrigues@github.com/hugorodrigues/rpc.js.git
 cd rpc.js/examples/standalone
 node example.js
 ```
-Goto http://localhost:3000/help.html
+Goto http://127.0.0.1:3000/help
 
 
 
 
 
-## Declaring Methods
+## How it works
+You simply define your methods and set the params.
 
 **Method declaration structure**
 
@@ -63,6 +68,82 @@ sum: {
 },
 ```
 
+
+```
+
+
+
+
+
+## Full Example
+
+```js
+// Load rpc.js
+var rpc = require('rpc.js');
+
+// Define you schema/Api
+rpc.schema =  {
+
+	// Groups - Used to categorize your methods
+    groups: {
+        math: {
+            name: 'Math',
+            info: 'Some example math methods',
+        },
+        util: {
+            name: 'Utility calls',
+            info: 'API test, debug and utility methods',
+        }
+
+    },
+
+    // Your API methods
+	methods: {
+
+		sum: {
+			info: 'Adding two numbers',
+			group: 'math',
+			params: {
+				x: { required: true, type: 'number', info: 'X value'},
+				y: { required: true, type: 'number', info: 'Y value'}
+			},
+			action: function(params,output)
+			{
+				var result = parseInt(params.x) + parseInt(params.y);
+				output.win(result);
+			}
+		},
+
+		helloWorld: {
+			info: 'Say hello!',
+			group: 'util',
+			params: {
+				name: { required: true, type: 'string', info: 'The name - Must be "World"'}
+			},
+			action: function(params,output)
+			{
+				if (params.name == 'World')
+					output.win("Hello World!");
+				else
+					output.fail(500,'The param "name" should be "World"');
+
+			}
+		}
+
+	}
+}
+
+// Run server on 127.0.0.1:3000
+rpc.server(3000, '127.0.0.1');
+
+```
+
+
+## Full schema example
+
+Check the file /examples/example.schema.js for the schema used in the demo API and Screenshot
+
+
 ## Output
 
 When coding inside the action you can output successful responses:
@@ -72,84 +153,55 @@ output.win("Hello World");
 Or error outputs:
 ```js
  output.fail(403, "Invalid API Key");
-```
-
-
-## Full Example
-
-Check the file /examples/example.schema.js for the schema used in the demo API and Screenshot
 
 
 
-
-## Example using with Flatiron
+## Using with Flatiron.js
 
 ```js
-
-var flatiron = require('flatiron'),
-    app = flatiron.app;
-
+...
 
 // include rpc.js
-var rpc = require('../../rpc.js');
-rpc.schema = require('../example.schema.js');
-
+var rpc = require('rpc.js');
+rpc.schema = require('./yourApiSchema.js');
 
 app.use(flatiron.plugins.http);
-
 app.router.post('/', function () {
 	// Send request to rpc.js
 	rpc.input(this.req.body.rpc,this.res);
 });
 
-// Serv UI static file
-app.router.get('/help.html', function () {
-	var self = this;
-	require('fs').readFile("../../ui/help.html", function(error, content) { self.res.writeHead(200, { 'Content-Type': 'text/html' }); self.res.end(content, 'utf-8'); });
-});
-
-app.start(3000);
+...
 
 ```
+Check/run /examples/flatiron for a full working example using flatiron
 
 
 
 
 
-## Example using with Express
+## Using with Express.js
 
 ```js
+...
 
  // include rpc.js
 var rpc = require('rpc.js');
-
-// load your API schema
-rpc.schema = require('yourApi.schema.js');
-
- // include express
-var express = require('express');
-var app = module.exports = express.createServer();
-
-// Express Configuration
-app.configure(function(){
-  app.use(express.bodyParser());
-  app.use(express.static('../../ui/'));
-  app.use(express.errorHandler()); 
-});
+rpc.schema = require('./yourApiSchema.js');
 
 app.post('/', function(req, res){
 	// Send request to rpc.js
 	rpc.input(req.body.rpc,res);  
 });
 
-
-app.listen(3000);
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
-
+...
 ```
+Check/run /examples/express for a full working example using express.js
 
 
-
+## Inspiration
+The auto ui/documentation was inspired by webservice.js by Marak Squires
+https://github.com/Marak/webservice.js 
 
 
 ## License 

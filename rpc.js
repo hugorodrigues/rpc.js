@@ -32,6 +32,14 @@ var rpc = {
 	// Empty Schema
 	schema: {},
 
+	// Server ui/doc ?
+	docOn: true,
+
+	// ui/doc Url
+	docUrl: '/help',
+
+	qs: require('querystring'),
+
 
 	// Default Errors. Can be extended
 	errors: {
@@ -134,6 +142,46 @@ var rpc = {
 
 		serverRequest.writeHead(200, {'Content-Type': 'application/json'});
 		serverRequest.end(JSON.stringify(response));
+	},
+
+	// Server
+	server: function(port, bindAdress)
+	{
+		var self = this;
+
+		// Start a regular http server
+		require('http').createServer(function (request, res) {
+
+		if (self.docOn == true && request.url == self.docUrl)
+		{
+			// Crappy static file implementation (Only used to serve the UI html file)
+			require('fs').readFile("../../ui/help.html", function(error, content) { 
+				res.writeHead(200, { 'Content-Type': 'text/html' }); 
+				res.end(content, 'utf-8'); 
+			});
+
+		} else {
+
+		    var postData = "";
+		    request.setEncoding("utf8");
+
+		    request.addListener("data", function(postDataChunk) {
+		      postData += postDataChunk;
+		    });
+
+		    request.addListener("end", function() {
+		    	var post = self.qs.parse(postData);
+
+		    	self.input(post.rpc,res); 
+		    });
+
+		}
+
+
+		}).listen(port, bindAdress);
+		
+		console.log('RPC.js Server running on '+bindAdress+':'+port);
+		console.log('RPC.js Api documentation: http://'+bindAdress+':'+port+self.docUrl);
 	}
 
 }
