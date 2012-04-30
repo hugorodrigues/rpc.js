@@ -71,6 +71,10 @@ sum: {
 
 ## Full Example
 
+The following example will create a JSON-RPC server on 127.0.0.1:3000 with two methods:
+- Sum
+- helloWorld (Note that this method requires the param name to be "World")
+
 ```js
 // Load rpc.js
 var rpc = require('rpc.js');
@@ -129,8 +133,9 @@ rpc.schema =  {
 
 // Run server on 127.0.0.1:3000
 rpc.server(3000, '127.0.0.1');
-
 ```
+
+When the server is running you can open http://127.0.0.1:3000 to view the documenation and start (interactive) testing your API.
 
 
 ## Full schema example
@@ -147,7 +152,7 @@ output.win("Hello World");
 Or error outputs:
 ```js
  output.fail(500, "You error Message");
-
+```
 
 
 ## Using with Flatiron.js
