@@ -1,21 +1,25 @@
-# rpc.js
-
-rpc.js is a simple and lightweight JSON-RPC server, gateway and doc for Node.JS
-
-You can use it standalone (without any dependecy) or integrate in your favorite framework (tested with flatiron and express)
-
 <img src="http://i.imgur.com/DNNlN.png" width="800" border = "0"/>
 
+# rpc.js
+
+*Simple and lightweight JSON-RPC [server, gateway and documentation] for Node.JS*
+
+You can use it standalone (without any dependency) or integrate in your favorite framework (tested with flatiron and express)
+
+---
+
 ## Main Features
-- Simple, lightweight and fast
+- Simple, Lightweight and Fast
 - Minimal implementation
-- Schema based
-- Integrates great with any framework
+- Json Schema based
 - Auto API documentation and interactive testing
-- Automaticaly validates required params
+- Automaticaly validates required parameters
+- Integrates great with any framework
 
 
 
+
+---
 ## Try a demo
 
 ```bash
@@ -28,11 +32,11 @@ Open your browser: http://127.0.0.1:3000/help
 
 
 
+---
 ## How it works
-You simply define your methods and set the params.
+You simply define your methods and set the parameters.
 
 **Method declaration structure**
-
 ```js
 methodName: {
 	info: 'Description of your method',
@@ -51,7 +55,6 @@ methodName: {
 ```
 
 **Example method that sum two numbers:**
-
 ```js
 sum: {
 	info: 'Sum two numbers',
@@ -69,12 +72,11 @@ sum: {
 
 
 
-
-
+---
 ## Full Example
 
 The following example will create a JSON-RPC server on 127.0.0.1:3000 with two methods:
-- Sum
+- sum
 - helloWorld (Note that this method requires the param name to be "World")
 
 ```js
@@ -83,21 +85,19 @@ var rpc = require('rpc.js');
 
 // Define you schema/Api
 rpc.schema =  {
-
 	// Groups - Used to categorize your methods
-    groups: {
-        math: {
-            name: 'Math',
-            info: 'Some example math methods',
-        },
-        util: {
-            name: 'Utility calls',
-            info: 'API test, debug and utility methods',
-        }
+	groups: {
+		math: {
+		    name: 'Math',
+		    info: 'Some example math methods',
+		},
+		util: {
+		    name: 'Utility calls',
+		    info: 'API test, debug and utility methods',
+		}
+	},
 
-    },
-
-    // Your API methods
+	// Your API methods
 	methods: {
 
 		sum: {
@@ -137,37 +137,52 @@ rpc.schema =  {
 rpc.server(3000, '127.0.0.1');
 ```
 
-When the server is running you can open http://127.0.0.1:3000/help to view the documenation and start (interactive) testing your API.
+When the server is running you can open http://127.0.0.1:3000/help to view the documenation and start testing your API.
+
+Inside the action you can output successful responses with `output.win("Hello World");` or error messages with `output.fail(500, "You error Message");`
+Check the file /examples/example.schema.js for the full schema used in the demo and Screenshot's.
 
 
 
 
-## Full schema example
 
-Check the file /examples/example.schema.js for the schema used in the demo and Screenshot's
+---
+## Consuming your api
 
+Just like you do with any regular JSON-RPC api. Some examples:
 
-
-
-## Output
-
-When coding inside the action you can output successful responses:
+#### In browser (using jquery)
 ```js
-output.win("Hello World");
+jQuery.post('http://127.0.0.1:3000', {rpc:JSON.stringify({
+    method:'sum', 
+    params: { x: 10, y:5 }
+})}, function (data){
+    
+    console.log(data.result);
+    // 15
+
+}, 'json');
 ```
-Or error outputs:
-```js
- output.fail(500, "You error Message");
+
+#### Command line (Curl)
+```bash
+curl -i -X POST -d rpc='{"method":"sum","params":{"x":"10","y":"5"}}' http://127.0.0.1:3000/
 ```
+Will Output: `{"jsonrpc":"2.0","result":15}`
 
 
 
 
+
+
+
+
+
+
+---
 ## Using with Flatiron.js
 
 ```js
-...
-// include rpc.js
 var rpc = require('rpc.js');
 rpc.schema = require('./yourApiSchema.js');
 
@@ -176,19 +191,18 @@ app.router.post('/', function () {
 	// Send request to rpc.js
 	rpc.input(this.req.body.rpc,this.res);
 });
-...
 ```
-Check/run /examples/flatiron for a full working example using flatiron
+Check `/examples/flatiron` for a full working example.
 
 
 
 
 
+
+---
 ## Using with Express.js
 
 ```js
-...
- // include rpc.js
 var rpc = require('rpc.js');
 rpc.schema = require('./yourApiSchema.js');
 
@@ -196,20 +210,22 @@ app.post('/', function(req, res){
 	// Send request to rpc.js
 	rpc.input(req.body.rpc,res);  
 });
-...
 ```
-Check/run /examples/express for a full working example using express.js
+Check `/examples/express` for a full working example.
 
 
 
 
+
+
+
+---
 ## Inspiration
-The auto ui/documentation was inspired by webservice.js by Marak Squires
+The automatic ui/documentation was inspired by webservice.js by Marak Squires
 https://github.com/Marak/webservice.js 
 
 
-
-
+---
 ## License 
 
 (The MIT License)
