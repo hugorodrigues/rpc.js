@@ -18,13 +18,30 @@ var app = module.exports = express.createServer();
 // Express Configuration
 app.configure(function(){
   app.use(express.bodyParser());
-  app.use(express.static('../../ui/'));
+  app.use(express.static('../../help/'));
   app.use(express.errorHandler()); 
 });
 
+
+// Send html UI
+app.get('/help', function(req, res){
+	res.end(rpc.uiHtml());	
+});
+
+
+// Send request to rpc.js
 app.post('/', function(req, res){
-	// Send request to rpc.js
-	rpc.input(req.body.rpc,res);  
+
+	rpc.input({
+		textInput: req.body.rpc,
+		callback: function(output) {
+
+			res.writeHead(200, {'Content-Type': 'application/json'});
+			res.end(JSON.stringify(output));
+
+		}
+	});
+
 });
 
 

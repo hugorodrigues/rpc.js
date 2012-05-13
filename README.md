@@ -186,10 +186,24 @@ Will Output: `{"jsonrpc":"2.0","result":15}`
 var rpc = require('rpc.js');
 rpc.schema = require('./yourApiSchema.js');
 
-app.use(flatiron.plugins.http);
+// Serv UI static file
+app.router.get('/help', function () {
+	this.res.end( rpc.uiHtml() );
+});
+
 app.router.post('/', function () {
+	var flat = this;
+
 	// Send request to rpc.js
-	rpc.input(this.req.body.rpc,this.res);
+	rpc.input({
+		textInput: flat.req.body.rpc,
+		callback: function(output) {
+
+			flat.res.writeHead(200, {'Content-Type': 'application/json'});
+			flat.res.end(JSON.stringify(output));
+
+		}
+	});
 });
 ```
 Check `/examples/flatiron` for a full working example.
@@ -206,9 +220,24 @@ Check `/examples/flatiron` for a full working example.
 var rpc = require('rpc.js');
 rpc.schema = require('./yourApiSchema.js');
 
+// Send html UI (Optional)
+app.get('/help', function(req, res){
+	res.end( rpc.uiHtml() );	
+});
+
+// Send request to rpc.js
 app.post('/', function(req, res){
-	// Send request to rpc.js
-	rpc.input(req.body.rpc,res);  
+
+	rpc.input({
+		textInput: req.body.rpc,
+		callback: function(output) {
+
+			res.writeHead(200, {'Content-Type': 'application/json'});
+			res.end(JSON.stringify(output));
+
+		}
+	});
+
 });
 ```
 Check `/examples/express` for a full working example.

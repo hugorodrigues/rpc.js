@@ -35,11 +35,15 @@ var rpc = {
 	// Server ui/doc ?
 	docOn: true,
 
+	// Activate jsonp?
+	jsonp: true,
+
 	// ui/doc Url
 	docUrl: '/help',
 
-	qs: require('querystring'),
-
+	_qs: require('querystring'),
+	_url: require('url'),
+	_fs: require('fs'),
 
 	// Default Errors. Can be extended
 	errors: {
@@ -50,45 +54,52 @@ var rpc = {
 		'-326021': { msg: 'Internal error' }
 	},
 
-
+	// Return Html UI
+	uiHtml: function(request)
+	{
+		return this._fs.readFileSync(__dirname+"/ui/help.html");
+	},
 
 	// Main input flow
-	input: function(textInput, serverRequest)
+	input: function(request)
 	{
-		// Get Json
-		try {
-			var input = JSON.parse(textInput);
-		} catch(err) {
-			return this.outputError(serverRequest,{}, -32600);
-		}
 
-		// If method is getApiSchema and Api Doc is on serv the schema
-		if (input.method == 'getApiSchema' && this.docOn == true)
-			return this.returnSchema(serverRequest, input, '');
+		// If input object is not direcly provided, parse json (default)
+		if (request.input == undefined)
+			try {
+				// Get Json
+				request.input = JSON.parse(request.textInput);
+			} catch(err) {
+				// If no json or invalid json end
+				return this.outputError(request, -32600);
+			}
 
-		// validate input method
-		if (input.method == '' || this.schema.methods[input.method] == undefined)
-			return this.outputError(serverRequest, input, -32601);
+		// If method is getApiSchema and Api Doc is on: serv the schema
+		if (request.input.method == 'getApiSchema' && this.docOn == true)
+			return this.output(request, this.returnSchema());
 
-		// Validate Params
-		for (param in this.schema.methods[input.method].params)
-			if (this.schema.methods[input.method].params[param].required == true && (input.params == undefined || input.params[param] == undefined || input.params[param] == ''))
-				return this.outputError(serverRequest, input, -32602);
+		// validate requested method
+		if (request.input.method == '' || this.schema.methods[request.input.method] == undefined)
+			return this.outputError(request, -32601);
 
+		// Validate requested params
+		for (param in this.schema.methods[request.input.method].params)
+			if (this.schema.methods[request.input.method].params[param].required == true && (request.input.params == undefined || request.input.params[param] == undefined || request.input.params[param] == ''))
+				return this.outputError(request, -32602);
 
 		var self = this;
 
-		// Execute Requested method and define callbacks
-		this.schema.methods[input.method].action(input.params, { 
-			win:function(output) { self.output(serverRequest, input, output); }, 
-			fail: function (code, msg) { self.outputError(serverRequest, input, code, msg)},
-			schema:function() { self.returnSchema(serverRequest, input, ''); }
+		// Execute Requested method and expose callbacks to the action
+		this.schema.methods[request.input.method].action( request.input.params, {
+			win:function(output) { self.output(request, output); }, 
+			fail:function (code, msg) { self.outputError(request, code, msg)},
+			schema:function() { return self.returnSchema(); }
 		});
 	},
 
 
-	// Return the current schema (Used by the UI)
-	returnSchema: function(serverRequest, input, output)
+	// Return the current schema (without actions)
+	returnSchema: function()
 	{
 		var response = {};
 
@@ -102,30 +113,29 @@ var rpc = {
 			};
 		}
 
-		this.output(serverRequest, input, {groups:this.schema.groups, methods: response});
+		return {groups:this.schema.groups, methods: response};
 	},
 
 
 
 	// Main output flow
-	output: function(serverRequest, input, output)
+	output: function(request, output)
 	{
 		var response = {
             jsonrpc: "2.0",
             result: output
 		}
 
-		if (input.id != undefined)
-			response.id = input.id		
+		if (request.input && request.input.id != undefined)
+			response.id = request.input.id		
 
-		serverRequest.writeHead(200, {'Content-Type': 'application/json'});
-		serverRequest.end(JSON.stringify(response));
+		request.callback(response);
 	},
 
 
 
 	// Error Output
-	outputError: function(serverRequest, input, code, msg, data)
+	outputError: function(request, code, msg, data)
 	{
 		if (msg == undefined && this.errors[code] != undefined)
 			msg = this.errors[code].msg;
@@ -142,43 +152,73 @@ var rpc = {
             }
 		}
 
-		if (input.id != undefined)
-			response.id = input.id
+		if (request.input && request.input.id != undefined)
+			response.id = request.input.id
 
-		serverRequest.writeHead(200, {'Content-Type': 'application/json'});
-		serverRequest.end(JSON.stringify(response));
+		request.callback(response);
 	},
 
-	// Server
+	// HTTP Server
 	server: function(port, bindAdress)
 	{
+
 		var self = this;
+
+		function makeJsonp(requestedCallback, output)
+		{
+			// if callback have any special character, cancel jsonp
+			if (self.jsonp == false || !requestedCallback || !requestedCallback.match(/^[\w-]+$/))
+				return output;
+
+			return requestedCallback+'('+output+')';
+		}
+
 
 		// Start a regular http server
 		require('http').createServer(function (request, res) {
 
-		if (self.docOn == true && request.url == self.docUrl)
-		{
-			// Crappy static file implementation (Only used to serve the UI html file)
-			require('fs').readFile("../../ui/help.html", function(error, content) { 
+			var postData = "";
+			var getData = self._url.parse(request.url,true).query;
+
+			request.setEncoding("utf8");
+
+
+			if (self.docOn == true && request.url == self.docUrl)
+			{
 				res.writeHead(200, { 'Content-Type': 'text/html' }); 
-				res.end(content, 'utf-8'); 
-			});
+				res.end(self.uiHtml(), 'utf-8'); 
 
-		} else {
+			} else {
 
-		    var postData = "";
-		    request.setEncoding("utf8");
+			    request.on("data", function(postDataChunk) {
+			      postData += postDataChunk;
+			    });
 
-		    request.addListener("data", function(postDataChunk) {
-		      postData += postDataChunk;
-		    });
+			    request.on("end", function() {
+			    	postData = self._qs.parse(postData);
 
-		    request.addListener("end", function() {
-		    	var post = self.qs.parse(postData);
 
-		    	self.input(post.rpc,res); 
-		    });
+			    	inputData = postData.rpc;
+
+			    	// Fallback to GET if there is no POST
+			    	if (inputData == '')
+			    		inputData = getData.rpc;
+
+			    	// Send the http request to rpc input
+			    	self.input({
+			    		textInput: inputData,
+						callback: function(output) {
+
+							output = makeJsonp(getData.jsoncallback, JSON.stringify(output) );
+
+							// Output back to HTTP Server
+							res.writeHead(200, {'Content-Type': 'application/json'});
+							res.end(output);
+
+						}
+					}); 
+
+			    });
 
 		}
 
