@@ -2,7 +2,7 @@
 
 # rpc.js
 
-*Simple and lightweight JSON-RPC [server, gateway and documentation] for Node.JS*
+*Simple and lightweight JSON-RPC [gateway, server and documentation] for Node.JS*
 
 You can use it standalone (without any dependency) or integrate in your favorite framework (tested with flatiron and express)
 
