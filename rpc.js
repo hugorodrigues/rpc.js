@@ -35,7 +35,7 @@ var rpc = {
 	// Server ui/doc ?
 	docOn: true,
 
-	// Activate jsonp?
+	// Activate jsonp ?
 	jsonp: true,
 
 	// ui/doc Url
@@ -58,6 +58,33 @@ var rpc = {
 	uiHtml: function(request)
 	{
 		return this._fs.readFileSync(__dirname+"/ui/help.html");
+	},
+
+
+	// Load/Compile multiple schemas
+	schemaLoad: function(schemas)
+	{
+		var tmp = {
+			groups : {},
+			methods : {},
+		};
+
+		var loadedSchema
+		for (schema in schemas)
+		{
+
+			loadedSchema = require(schemas[schema])();
+
+			tmp.groups[schema] = loadedSchema['info'];
+
+			for (method in loadedSchema['methods'])
+				{
+					loadedSchema['methods'][method]['group'] = schema;
+					tmp.methods[schema+'.'+method] = loadedSchema['methods'][method];
+				}
+		}
+
+		return tmp;
 	},
 
 	// Main input flow

@@ -22,7 +22,6 @@
             }
 
 
-
             input, textarea
             {
                 border: none;
@@ -284,9 +283,10 @@
             {
                 var params = {};
                 for (i in schema.methods[method].params)
-                    params[i] = $('#'+method+'-'+i).val();
+                    params[i] = $("input[id='"+method+'-'+i+"']").val();
+
                 
-                var obj =  $('#testDetails-'+method);
+                var obj =  $("div[id='testDetails-"+method+"']");
                 
                 //$('.testArea',obj).stop().fadeOut(1000);
 
