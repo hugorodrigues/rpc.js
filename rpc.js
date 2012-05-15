@@ -26,43 +26,152 @@
 	THE SOFTWARE.
 */
 
-var rpc = {
+
+module.exports = {
+
+	// Create new rpc gateway
+   	gateway: function(config) {
+
+		if (config.schema == undefined)
+		{
+			console.log('No schema defined');
+			return false;
+		}
+
+		var schema = config.schema;
+
+		// Default Errors. Can be extended
+		var errors =  {
+			'-32601': { msg: 'Method not found' },
+			'-32700': { msg: 'No JSON was received.' },
+			'-32600': { msg: 'The JSON sent is invalid.' },
+			'-32602': { msg: 'Invalid method parameter(s)' },
+			'-326021': { msg: 'Internal error' }
+		};
+
+		// Extend errors if necessary
+		if (config.errors)
+			for (error in config.errors)
+				errors[error] = config.errors[error];
 
 
-	// Empty Schema
-	schema: {},
+		var _fs = require('fs');
+		var obj = {};
 
-	// Server ui/doc ?
-	docOn: true,
 
-	// Activate jsonp ?
-	jsonp: true,
+		// Return Html UI
+		obj.uiHtml = function(request)
+		{
+			return _fs.readFileSync(__dirname+"/ui/help.html");
+		};
 
-	// ui/doc Url
-	docUrl: '/help',
+		// Main input flow
+		obj.input = function(request)
+		{
 
-	_qs: require('querystring'),
-	_url: require('url'),
-	_fs: require('fs'),
+			// If input object is not direcly provided, parse json (default)
+			if (request.input == undefined)
+				try {
+					// Get Json
+					request.input = JSON.parse(request.textInput);
+				} catch(err) {
+					// If no json or invalid json end
+					return obj.outputError(request, -32600);
+				}
 
-	// Default Errors. Can be extended
-	errors: {
-		'-32601': { msg: 'Method not found' },
-		'-32700': { msg: 'No JSON was received.' },
-		'-32600': { msg: 'The JSON sent is invalid.' },
-		'-32602': { msg: 'Invalid method parameter(s)' },
-		'-326021': { msg: 'Internal error' }
+			// If method is getApiSchema and Api Doc is on: serv the schema
+			if (request.input.method == 'getApiSchema')
+				return obj.output(request, obj.returnSchema());
+
+			// validate requested method
+			if (request.input.method == '' || schema.methods[request.input.method] == undefined)
+				return obj.outputError(request, -32601);
+
+			// Validate requested params
+			for (param in schema.methods[request.input.method].params)
+				if (schema.methods[request.input.method].params[param].required == true && (request.input.params == undefined || request.input.params[param] == undefined || request.input.params[param] == ''))
+					return obj.outputError(request, -32602);
+
+			//var self = this;
+
+			// Execute Requested method and expose callbacks to the action
+			schema.methods[request.input.method].action( request.input.params, {
+				win:function(output) { obj.output(request, output); }, 
+				fail:function (code, msg) { obj.outputError(request, code, msg)},
+				schema:function() { return obj.returnSchema(); }
+			});
+		};
+
+		// Return the current schema (without actions)
+		obj.returnSchema = function()
+		{
+			var response = {};
+
+			for (method in schema.methods)
+			{
+				response[method] = {
+					info: schema.methods[method].info,
+					group: schema.methods[method].group,
+					apiKey: schema.methods[method].apiKey,
+					params: schema.methods[method].params
+				};
+			}
+
+			return {groups:schema.groups, methods: response};
+		};
+
+		// Main output flow
+		obj.output = function(request, output)
+		{
+			var response = {
+	            jsonrpc: "2.0",
+	            result: output
+			}
+
+			if (request.input && request.input.id != undefined)
+				response.id = request.input.id		
+
+			request.callback(response);
+		};
+
+		// Error Output
+		obj.outputError = function(request, code, msg, data)
+		{
+			if (msg == undefined && errors[code] != undefined)
+				msg = errors[code].msg;
+
+			if (data == undefined && errors[code] != undefined)
+				data = errors[code].data;
+
+			var response = {
+	            jsonrpc: "2.0",
+	            error: {
+	                "code": code,
+	                "message": msg,
+	                "data": data,
+	            }
+			}
+
+			if (request.input && request.input.id != undefined)
+				response.id = request.input.id
+
+			request.callback(response);
+		};
+
+
+
+		return obj;
 	},
 
-	// Return Html UI
-	uiHtml: function(request)
+	// Return one of the build-in servers
+	server: function(type, config)
 	{
-		return this._fs.readFileSync(__dirname+"/ui/help.html");
+		return require(__dirname+'/servers/'+type+'.js')(config);
 	},
 
 
 	// Load/Compile multiple schemas
-	schemaLoad: function(schemas)
+	compile: function(schemas)
 	{
 		var tmp = {
 			groups : {},
@@ -85,177 +194,7 @@ var rpc = {
 		}
 
 		return tmp;
-	},
-
-	// Main input flow
-	input: function(request)
-	{
-
-		// If input object is not direcly provided, parse json (default)
-		if (request.input == undefined)
-			try {
-				// Get Json
-				request.input = JSON.parse(request.textInput);
-			} catch(err) {
-				// If no json or invalid json end
-				return this.outputError(request, -32600);
-			}
-
-		// If method is getApiSchema and Api Doc is on: serv the schema
-		if (request.input.method == 'getApiSchema' && this.docOn == true)
-			return this.output(request, this.returnSchema());
-
-		// validate requested method
-		if (request.input.method == '' || this.schema.methods[request.input.method] == undefined)
-			return this.outputError(request, -32601);
-
-		// Validate requested params
-		for (param in this.schema.methods[request.input.method].params)
-			if (this.schema.methods[request.input.method].params[param].required == true && (request.input.params == undefined || request.input.params[param] == undefined || request.input.params[param] == ''))
-				return this.outputError(request, -32602);
-
-		var self = this;
-
-		// Execute Requested method and expose callbacks to the action
-		this.schema.methods[request.input.method].action( request.input.params, {
-			win:function(output) { self.output(request, output); }, 
-			fail:function (code, msg) { self.outputError(request, code, msg)},
-			schema:function() { return self.returnSchema(); }
-		});
-	},
-
-
-	// Return the current schema (without actions)
-	returnSchema: function()
-	{
-		var response = {};
-
-		for (method in this.schema.methods)
-		{
-			response[method] = {
-				info: this.schema.methods[method].info,
-				group: this.schema.methods[method].group,
-				apiKey: this.schema.methods[method].apiKey,
-				params: this.schema.methods[method].params
-			};
-		}
-
-		return {groups:this.schema.groups, methods: response};
-	},
-
-
-
-	// Main output flow
-	output: function(request, output)
-	{
-		var response = {
-            jsonrpc: "2.0",
-            result: output
-		}
-
-		if (request.input && request.input.id != undefined)
-			response.id = request.input.id		
-
-		request.callback(response);
-	},
-
-
-
-	// Error Output
-	outputError: function(request, code, msg, data)
-	{
-		if (msg == undefined && this.errors[code] != undefined)
-			msg = this.errors[code].msg;
-
-		if (data == undefined && this.errors[code] != undefined)
-			data = this.errors[code].data;
-
-		var response = {
-            jsonrpc: "2.0",
-            error: {
-                "code": code,
-                "message": msg,
-                "data": data,
-            }
-		}
-
-		if (request.input && request.input.id != undefined)
-			response.id = request.input.id
-
-		request.callback(response);
-	},
-
-	// HTTP Server
-	server: function(port, bindAdress)
-	{
-
-		var self = this;
-
-		function makeJsonp(requestedCallback, output)
-		{
-			// if callback have any special character, cancel jsonp
-			if (self.jsonp == false || !requestedCallback || !requestedCallback.match(/^[\w-]+$/))
-				return output;
-
-			return requestedCallback+'('+output+')';
-		}
-
-
-		// Start a regular http server
-		require('http').createServer(function (request, res) {
-
-			var postData = "";
-			var getData = self._url.parse(request.url,true).query;
-
-			request.setEncoding("utf8");
-
-
-			if (self.docOn == true && request.url == self.docUrl)
-			{
-				res.writeHead(200, { 'Content-Type': 'text/html' }); 
-				res.end(self.uiHtml(), 'utf-8'); 
-
-			} else {
-
-			    request.on("data", function(postDataChunk) {
-			      postData += postDataChunk;
-			    });
-
-			    request.on("end", function() {
-			    	postData = self._qs.parse(postData);
-
-
-			    	inputData = postData.rpc;
-
-			    	// Fallback to GET if there is no POST
-			    	if (inputData == '')
-			    		inputData = getData.rpc;
-
-			    	// Send the http request to rpc input
-			    	self.input({
-			    		textInput: inputData,
-						callback: function(output) {
-
-							output = makeJsonp(getData.jsoncallback, JSON.stringify(output) );
-
-							// Output back to HTTP Server
-							res.writeHead(200, {'Content-Type': 'application/json'});
-							res.end(output);
-
-						}
-					}); 
-
-			    });
-
-		}
-
-
-		}).listen(port, bindAdress);
-
-		console.log('RPC.js Server running on '+bindAdress+':'+port);
-		console.log('RPC.js Api documentation: http://'+bindAdress+':'+port+self.docUrl);
 	}
 
-}
+};
 
-module.exports = rpc;
