@@ -10,28 +10,32 @@ var flatiron = require('flatiron'),
 	app.use(flatiron.plugins.http);
 
 
-// include rpc.js
+// Load rpc.js 
 var rpc = require('../../rpc.js');
-rpc.schema = require('../example.schema.js');
+
+// Setup your schema
+var rpcJs = rpc.gateway({
+	schema: require('../example.schema.js')
+});
+
 
 // Serv UI static file
 app.router.get('/help', function () {
-
-	this.res.end( rpc.uiHtml() );
-
+	this.res.end( rpcJs.uiHtml() );
 });
+
 
 app.router.post('/', function () {
 
-	var flat = this;
+	var flatiron = this;
 
 	// Send request to rpc.js
-	rpc.input({
-		textInput: flat.req.body.rpc,
+	rpcJs.input({
+		textInput: flatiron.req.body.rpc,
 		callback: function(output) {
 
-			flat.res.writeHead(200, {'Content-Type': 'application/json'});
-			flat.res.end(JSON.stringify(output));
+			flatiron.res.writeHead(200, {'Content-Type': 'application/json'});
+			flatiron.res.end(JSON.stringify(output));
 
 		}
 	});

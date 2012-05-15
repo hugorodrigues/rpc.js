@@ -11,21 +11,20 @@ You can use it standalone (without any dependency) or integrate in your favorite
 ## Main Features
 - Simple, Lightweight and Fast
 - Minimal implementation
-- Json Schema based
 - Auto API documentation and interactive testing
 - Automaticaly validates required parameters
 - Integrates great with any framework
 
-
-
+- Works with POST or GET (if using the http server) 
+- Compatible with jsonp (for cross-domain requests)
+- You can have multiple API version's exposed
 
 ---
 ## Try a demo
 
 ```bash
 git clone https://hugorodrigues@github.com/hugorodrigues/rpc.js.git
-cd rpc.js/examples/standalone
-node example.js
+node rpc.js/examples/servers/http.js
 ```
 Open your browser: http://127.0.0.1:3000/help
 
@@ -49,6 +48,9 @@ methodName: {
 		// Do your stuff here
 		// You can use the params: params.paramFoo params.paramBar
 		// When ready output with: output.win(result);
+
+		// On error output with: output.fail(errorCode,errorMsg,errorData);
+
 
 	}
 },
@@ -84,7 +86,7 @@ The following example will create a JSON-RPC server on 127.0.0.1:3000 with two m
 var rpc = require('rpc.js');
 
 // Define you schema/Api
-rpc.schema =  {
+var apiSchema = {
 	// Groups - Used to categorize your methods
 	groups: {
 		math: {
@@ -131,13 +133,20 @@ rpc.schema =  {
 		}
 
 	}
-}
+};
 
-// Run server on 127.0.0.1:3000
-rpc.server(3000, '127.0.0.1');
+
+// Run a HTTP server on 127.0.0.1:3000 and with your schema
+rpc.server('http', {
+	port: 3000,
+	address: '127.0.0.1',
+	gateway: rpc.gateway({ schema: apiSchema }) // Your previously defined apiSchema
+});
+
+
 ```
 
-When the server is running you can open http://127.0.0.1:3000/help to view the documenation and start testing your API.
+When the server is running, you can open http://127.0.0.1:3000/help to view the documenation and start testing your API.
 
 Inside the action you can output successful responses with `output.win("Hello World");` or error messages with `output.fail(500, "You error Message");`
 Check the file /examples/example.schema.js for the full schema used in the demo and Screenshot's.
@@ -175,72 +184,28 @@ Will Output: `{"jsonrpc":"2.0","result":15}`
 
 
 
-
-
-
-
 ---
-## Using with Flatiron.js
+## Examples
+rpc-js is very flexible and can be adpted to your needs.
+Check the examples
 
-```js
-var rpc = require('rpc.js');
-rpc.schema = require('./yourApiSchema.js');
-
-// Serv UI static file
-app.router.get('/help', function () {
-	this.res.end( rpc.uiHtml() );
-});
-
-app.router.post('/', function () {
-	var flat = this;
-
-	// Send request to rpc.js
-	rpc.input({
-		textInput: flat.req.body.rpc,
-		callback: function(output) {
-
-			flat.res.writeHead(200, {'Content-Type': 'application/json'});
-			flat.res.end(JSON.stringify(output));
-
-		}
-	});
-});
-```
-Check `/examples/flatiron` for a full working example.
+`servers/http.js` - Standalone HTTP server implementation. 
 
 
+`examples/dummy` - This examples shows you how to use your api without any server. Is usefull when you need to access your api inside another nodejs application.
 
 
+`examples/express` - Using your API in a expressJs Application
+
+`examples/flatiron` - Using your API in a flatiron Application
+
+`examples/multi-schema` - Insted of having a large schema, you can divide your api code base in a class-like fashion, This example is suggested if you have a big api and/or prefer use multiple object files.
+
+`examples/multi-server` - Expose the same API in multiple http ports
+
+`examples/multi-version` - Expose multiple versions of your API (/v1, /v2 etc...)
 
 
----
-## Using with Express.js
-
-```js
-var rpc = require('rpc.js');
-rpc.schema = require('./yourApiSchema.js');
-
-// Send html UI (Optional)
-app.get('/help', function(req, res){
-	res.end( rpc.uiHtml() );	
-});
-
-// Send request to rpc.js
-app.post('/', function(req, res){
-
-	rpc.input({
-		textInput: req.body.rpc,
-		callback: function(output) {
-
-			res.writeHead(200, {'Content-Type': 'application/json'});
-			res.end(JSON.stringify(output));
-
-		}
-	});
-
-});
-```
-Check `/examples/express` for a full working example.
 
 
 
