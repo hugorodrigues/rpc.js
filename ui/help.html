@@ -256,7 +256,8 @@
 
         <script>
             var schema;
-            var apiGateway = window.location.href.slice(0,-4);
+            var apiGateway = document.createElement('a'); apiGateway.href = window.location.href; 
+            apiGateway = apiGateway.protocol+'//'+apiGateway.host+apiGateway.pathname+'/../';
             $(function() {
             
                 jQuery.post(apiGateway, {rpc:JSON.stringify({
