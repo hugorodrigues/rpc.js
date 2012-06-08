@@ -10,6 +10,7 @@ module.exports = function(params)
 		jsonp: false,
 		mount: '/',
 		postVar: 'rpc',
+		socketIo: false,
 		gateway: false,
 		versions: false
 	};
@@ -58,7 +59,7 @@ module.exports = function(params)
 
 
 	// Start a regular http server
-	require('http').createServer(function (request, res) {
+	var httpServer = require('http').createServer(function (request, res) {
 
 		request.setEncoding("utf8");
 
@@ -78,7 +79,7 @@ module.exports = function(params)
 
 		if (config.autoDoc == true && requestGateway.ui == true )
 		{
-			res.writeHead(200, { 'Content-Type': 'text/html' }); 
+			res.writeHead(200, { 'Set-Cookie': 'socketIo='+config.socketIo, 'Content-Type': 'text/html' }); 
 			res.end(requestGateway.gateway.uiHtml(), 'utf-8'); 
 
 		} else {
@@ -117,6 +118,19 @@ module.exports = function(params)
 
 	}).listen(config.port, config.address);
 
+	// Activate websockets?
+	if (config.socketIo == true)
+	{
+		var io = require('socket.io').listen(httpServer)
+
+		io.sockets.on('connection', function (socket) {
+		  socket.on('rpc', function (input,fn) {
+
+			routeCache[config.mount].gateway.input({ input: input, callback: fn });
+
+		  });
+		});
+	}
 
 	console.log('RPC.js Server running on '+config.address+':'+config.port+config.mount);
 	console.log('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ');
@@ -139,5 +153,5 @@ module.exports = function(params)
 
 	}
 
-
+	return httpServer;
 }

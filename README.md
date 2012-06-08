@@ -14,8 +14,7 @@ You can use it standalone (without any dependency) or integrate in your favorite
 - Auto API documentation and interactive testing
 - Automaticaly validates required parameters
 - Integrates great with any framework
-
-- Works with POST or GET (if using the http server) 
+- Works with POST or GET (if using the http server)
 - Compatible with jsonp (for cross-domain requests)
 - You can have multiple API version's exposed
 
@@ -50,8 +49,6 @@ methodName: {
 		// When ready output with: output.win(result);
 
 		// On error output with: output.fail(errorCode,errorMsg,errorData);
-
-
 	}
 },
 ```
@@ -189,11 +186,11 @@ Will Output: `{"jsonrpc":"2.0","result":15}`
 rpc-js is very flexible and can be adpted to your needs.
 Check the examples
 
-`servers/http.js` - Standalone HTTP server implementation. 
+`examples/servers/http.js` - Standalone HTTP server implementation. 
 
+`examples/servers/socketio.js` - Socket.Io Implementation. 
 
 `examples/dummy` - This examples shows you how to use your api without any server. Is usefull when you need to access your api inside another nodejs application.
-
 
 `examples/express` - Using your API in a expressJs Application
 
@@ -204,8 +201,6 @@ Check the examples
 `examples/multi-server` - Expose the same API in multiple http ports
 
 `examples/multi-version` - Expose multiple versions of your API (/v1, /v2 etc...)
-
-
 
 
 

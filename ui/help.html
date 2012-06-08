@@ -1,463 +1,492 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Api Help</title>
-        <meta name="author" content="hr">
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-        <script src="http://jtemplates.tpython.com/jTemplates/jquery-jtemplates.js"></script>       
-        <!--
-        This is a static file that generate the UI/Help for your rpc.js API
-        If you use this in production you should put the css and JS in a external files
-        -->
-        <style>
+<head>
+    <meta charset="utf-8">
+    <title>Api Help</title>
+    <meta name="author" content="hr">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="http://jtemplates.tpython.com/jTemplates/jquery-jtemplates.js"></script>
 
-            body
-            {
-                background-color: white;
-                color:white;
-                margin: 0px;
-                font-family: arial;
-                font-size: 12px;
-            }
+    <script>document.cookie.indexOf('socketIo=true') == -1 || document.write('<script src="/socket.io/socket.io.js"><\/script>')</script>
 
 
-            input, textarea
-            {
-                border: none;
-                padding: 3px;
-                border: solid 1px #CCC;
-            }
+    <!--
+    This is a static file that generate the UI/Help for your rpc.js API
+    If you use this in production you should put the css and JS in a external files
+    -->
 
-            textarea
-            {
-                width: 700px;
-                height: 200px;
-            }
+    <style>
+    body
+    {
+        background-color: white;
+        color:white;
+        margin: 0px;
+        font-family: arial;
+        font-size: 12px;
+    }
 
+    input, textarea
+    {
+        border: none;
+        padding: 3px;
+        border: solid 1px #CCC;
+    }
 
-            ul
-            {
-                margin: 0px;
-                padding: 0px;
-                margin-left: 15px;
-                color:#F28D00;
-            }
-
-
-            h1,h2,h3,h4,h5{margin: 0px; padding: 0px;}
-
-
-            h3{
-                color:black; 
-                font-size: 12px;
-
-                border-top: dashed 1px #bbb; 
-                padding-top: 20px;
-                margin-bottom: 3px;
-                margin-top: 15px;
-
-                text-transform: uppercase;
-
-            }
-
-            h4 {padding-top: 10px;  font-size: 12px; color:#666;}
-
-            h1 {
-                font-size: 34px;
-                color:#F28D00;
-                m_argin-bottom: 7px;
-                text-shadow: 1px 1px black;
-            }
+    textarea
+    {
+        width: 700px;
+        height: 200px;
+    }
 
 
-            table
-            {
-                width: 100%;
-                margin: 0px;
-                padding: 0px;
-                border-collapse: collapse;
-                border-spacing: 0;    
-                border-radius:5px;
-
-            }
-
-            tr
-            {
-                margin: 0px;
-                padding: 0px;
-            }
-
-            td{
-                padding: 3px;
-                border-bottom:solid 1px #CCC;
-                margin: 0px;
-            }
-
-            .tryBt
-            {
-                cursor: pointer;
-            }
-
-            .method { 
-                background-color: #1d1d1d;
-                border-radius: 5px;
-                margin-bottom: 5px;
-                padding: 8px;
-                border-top: solid 1px #242424;
-                border-bottom: solid 1px #131313;
+    ul
+    {
+        margin: 0px;
+        padding: 0px;
+        margin-left: 15px;
+        color:#F28D00;
+    }
 
 
-            }            
-
-            .method a { 
-                color: white;
-                font-size: 14px;
-                text-decoration: none;
-            }            
-
-            .detail { 
-                display: none;
-
-                margin: 10px;
-                background-color: #F2F2F2;
-                color: black;
-                padding: 10px;
-
-                border-radius: 5px;
-            }
+    h1,h2,h3,h4,h5{margin: 0px; padding: 0px;}
 
 
-            .box
-            {
-                font-family: monospace;
-                background-color: #F2F2F2;
-                box-shadow:inset 0 0 2px #CCC;
-                -moz-box-shadow:inset 0 0 2px #CCC;
+    h3{
+        color:black; 
+        font-size: 12px;
 
-                border:solid 1px #CCC;
-                color:#666;
-                padding: 8px;
-                border-radius:5px;
-            }
+        border-top: dashed 1px #bbb; 
+        padding-top: 20px;
+        margin-bottom: 3px;
+        margin-top: 15px;
 
-            .box2
-            {
-                white-space: pre;
-                font-family: monospace;
+        text-transform: uppercase;
 
-                background-color: #272822;
-                color:white;
-                padding: 8px;
-                border-radius:5px;
-            }
+    }
+
+    h4 {padding-top: 10px;  font-size: 12px; color:#666;}
+
+    h1 {
+        font-size: 34px;
+        color:#F28D00;
+        m_argin-bottom: 7px;
+        text-shadow: 1px 1px black;
+    }
 
 
-            .info
-            {
-                margin-bottom: 20px; 
-                margin-top: 13px; 
+    table
+    {
+        width: 100%;
+        margin: 0px;
+        padding: 0px;
+        border-collapse: collapse;
+        border-spacing: 0;    
+        border-radius:5px;
 
-                background-color: black;
-                color:white; 
-                padding: 5px;
-                padding-top: 2px;
-                padding-bottom: 2px;
-                border-radius: 3px;
-            }
+    }
 
-            .logo{
-                width: 120px; 
-                height: 120px; 
-                line-height: 120px;
-                background: #F28D00; 
-                color: white;
-                border-radius: 120px;
-                text-align: center;
-                font-size: 18px;
-                margin-left: 25px;
-                margin-bottom: 25px;
-                margin-top: 15px;
-            }
+    tr
+    {
+        margin: 0px;
+        padding: 0px;
+    }
 
-            a,a:visited,a:active,a:link {
-                color: #666;
-                text-decoration: none;
-            }
+    td{
+        padding: 3px;
+        border-bottom:solid 1px #CCC;
+        margin: 0px;
+    }
 
-            a:hover{
-                color: #F28D00;
-            }
+    .tryBt
+    {
+        cursor: pointer;
+        width:100%; 
+        margin-top:10px;
+    }
 
-            .testDetails
-            {
-                m_argin-top:20px; 
-                padding: 20px; 
-
-                padding-top: 80px; 
-                padding-bottom: 80px;
-
-                border-bottom: solid 1px #bbb;    
-                color:black;
-
-                box-shadow: 0 0 20px #ccc; 
-                -webkit-box-shadow: 0 0 20px #ccc; 
-                -moz-box-shadow: 0 0 20px #ccc;                
-            }
+    .method { 
+        background-color: #1d1d1d;
+        border-radius: 5px;
+        margin-bottom: 5px;
+        padding: 8px;
+        border-top: solid 1px #242424;
+        border-bottom: solid 1px #131313;
 
 
+    }            
 
-            #navigation
-            {
-                position: fixed;
-                top: 0; left: 0; bottom: 0;
-                width: 200px;
-                overflow-y: auto;
-                overflow-x: hidden;
-                -webkit-overflow-scrolling: touch;
+    .method a { 
+        color: white;
+        font-size: 14px;
+        text-decoration: none;
+    }            
 
-                padding: 10px;
-                border-right: 1px solid #bbb;
+    .detail { 
+        display: none;
 
-                box-shadow: 0 0 20px #ccc; 
-                -webkit-box-shadow: 0 0 20px #ccc; 
-                -moz-box-shadow: 0 0 20px #ccc;
+        margin: 10px;
+        background-color: #F2F2F2;
+        color: black;
+        padding: 10px;
 
-                background-color: #F2F2F2;
-                color:black;      
-            }
+        border-radius: 5px;
+    }
 
 
-            #main
-            {
-                position: relative;
-                margin-left:220px;
-            }
+    .box
+    {
+        font-family: monospace;
+        background-color: #F2F2F2;
+        box-shadow:inset 0 0 2px #CCC;
+        -moz-box-shadow:inset 0 0 2px #CCC;
 
-            .string
-            {
-                color:#e4d87b;
-            }
-            .key
-            {
-                color:#b2da3e;
-            }
-            .boolean
-            {
-                color:#20B200;
-            }
-            .number
-            {
-                color:red;
-            }
+        border:solid 1px #CCC;
+        color:#666;
+        padding: 8px;
+        border-radius:5px;
+    }
 
-        </style>
+    .box2
+    {
+        white-space: pre;
+        font-family: monospace;
+
+        background-color: #272822;
+        color:white;
+        padding: 8px;
+        border-radius:5px;
+    }
 
 
-        <script>
-            var schema;
-            var apiGateway = document.createElement('a'); apiGateway.href = window.location.href; 
-            apiGateway = apiGateway.protocol+'//'+apiGateway.host+apiGateway.pathname+'/../';
-            $(function() {
+    .info
+    {
+        margin-bottom: 20px; 
+        margin-top: 13px; 
+
+        background-color: black;
+        color:white; 
+        padding: 5px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        border-radius: 3px;
+    }
+
+    .logo{
+        width: 120px; 
+        height: 120px; 
+        line-height: 120px;
+        background: #F28D00; 
+        color: white;
+        border-radius: 120px;
+        text-align: center;
+        font-size: 18px;
+        margin-left: 25px;
+        margin-bottom: 25px;
+        margin-top: 15px;
+    }
+
+    a,a:visited,a:active,a:link {
+        color: #666;
+        text-decoration: none;
+    }
+
+    a:hover{
+        color: #F28D00;
+    }
+
+    .testDetails
+    {
+        m_argin-top:20px; 
+        padding: 20px; 
+
+        padding-top: 80px; 
+        padding-bottom: 80px;
+
+        border-bottom: solid 1px #bbb;    
+        color:black;
+
+        box-shadow: 0 0 20px #ccc; 
+        -webkit-box-shadow: 0 0 20px #ccc; 
+        -moz-box-shadow: 0 0 20px #ccc;                
+    }
+
+
+
+    #navigation
+    {
+        position: fixed;
+        top: 0; left: 0; bottom: 0;
+        width: 200px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+
+        padding: 10px;
+        border-right: 1px solid #bbb;
+
+        box-shadow: 0 0 20px #ccc; 
+        -webkit-box-shadow: 0 0 20px #ccc; 
+        -moz-box-shadow: 0 0 20px #ccc;
+
+        background-color: #F2F2F2;
+        color:black;      
+    }
+
+
+    #main
+    {
+        position: relative;
+        margin-left:220px;
+    }
+
+    .string
+    {
+        color:#e4d87b;
+    }
+    .key
+    {
+        color:#b2da3e;
+    }
+    .boolean
+    {
+        color:#20B200;
+    }
+    .number
+    {
+        color:red;
+    }
+
+    </style>
+
+    <script>
+
+    var socketIO, schema, rpc;
+
+
+
+    $(function() {
+
+        rpc = rpcClient();
+
+        // Are we under socket.io ?
+        if (typeof(io) != "undefined")
+            socketIO = io.connect('http://localhost');
+        else 
+            socketIO = false;            
+
+
+        // Get api schema and build the UI
+        rpc.input('getApiSchema',{},function(data){
+            schema = data.result;
+            console.log(schema);
             
-                jQuery.post(apiGateway, {rpc:JSON.stringify({
-                    method:'getApiSchema', 
-                    params:'Hello World', 
-                    id:1
-                })}, function (data){
-                    
-                    schema = data.result;
-                    console.log(schema);
-                    
-                    $(".testee").setTemplate($('#tplFiltragem').html());
-                    $(".testee").processTemplate({'data': data.result.methods});      
-                    
-                    $("#menu").setTemplate($('#tplMenu').html());
-                    $("#menu").processTemplate({'data': data.result});
-                
-                }, 'json');
-        
+            $(".testee").setTemplate($('#tplFiltragem').html());
+            $(".testee").processTemplate({'data': data.result.methods});      
+            
+            $("#menu").setTemplate($('#tplMenu').html());
+            $("#menu").processTemplate({'data': data.result});
+        })
+
+
+        // Capture and process form tests
+        $('.formMethod').live("submit", function(){
+
+            var method = $(this).attr('action'),
+                params = {};
+
+            for (i in schema.methods[method].params)
+                params[i] = $("#"+i,this).val();
+
+            var obj = this;
+
+            $('.tryBt',obj).val('Loading...');
+
+            var startTime = +(new Date);
+            rpc.input(method, params, function(response, request) {
+                var endTime =  (+(new Date)) - startTime;
+                $('.tryBt',obj).val('run interactive test');      
+                $('.testBody',obj).html(syntaxHighlight(JSON.stringify(response, undefined, 4)));
+                $('.testStatus',obj).html(request.status +' '+request.statusText+' - Time: '+endTime+'ms');
+                $('.testCurl',obj).html( rpc.curlify(method, schema.methods[method].params, params) );
+                $('.testArea',obj).fadeIn(600);
             });
-            
-            
-            function methodTest(method)
-            {
-                var params = {};
-                for (i in schema.methods[method].params)
-                    params[i] = $("input[id='"+method+'-'+i+"']").val();
 
-                
-                var obj =  $("div[id='testDetails-"+method+"']");
-                
-                //$('.testArea',obj).stop().fadeOut(1000);
+            return false;
+        })
 
-                $('.tryBt',obj).val('Loading...');
-                
-                //$('.testBody',obj).html('');
-                //$('.testStatus',obj).html('');
-                
-                
-                $.ajax({
-                    url: apiGateway,
-                    type: "POST",
-                    data: {"rpc":JSON.stringify({method:method,params:params})},
-                    dataTypeString: 'json',
-                    cacheBoolean: false,
-                    complete: function(jqXHR,textStatus) {
-                        
-                        $('.tryBt',obj).val('run interactive test');      
-                        
-                        var xxx = syntaxHighlight(JSON.stringify(JSON.parse(jqXHR.responseText), undefined, 4));
-                        
-                        $('.testBody',obj).html(xxx);
-                        $('.testStatus',obj).html(jqXHR.status +' '+jqXHR.statusText);
-                        $('.testCurl',obj).html( createCurl(method,schema.methods[method].params) );
-                        $('.testArea',obj).fadeIn(600);
-                        
-                    }
-                    
-                });                
 
-            }
-            
-            
-            function createCurl(method,params,input)
-            {
-                var input = [];
-                var result = {};
-                
-                for (i in params)
-                {
-                    result[i] = ''+$('#'+method+'-'+i).val();
-                    if (result[i] == "undefined")
-                        result[i] = '';
+    });
+
+
+    // stackoverflow.com/questions/4810841/json-pretty-print-using-javascript
+    function syntaxHighlight(json) {
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
                 }
-                
-                var tmp = {
-                    method: method,
-                    params: result
-                }
-                
-                return "curl -i -X POST -d rpc='"+JSON.stringify(tmp)+"' "+apiGateway;
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
             }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    }
+
             
-            
-     
+    </script>
+</head>
+<body>
 
 
-            function syntaxHighlight(json) {
-                json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-                    var cls = 'number';
-                    if (/^"/.test(match)) {
-                        if (/:$/.test(match)) {
-                            cls = 'key';
-                        } else {
-                            cls = 'string';
-                        }
-                    } else if (/true|false/.test(match)) {
-                        cls = 'boolean';
-                    } else if (/null/.test(match)) {
-                        cls = 'null';
-                    }
-                    return '<span class="' + cls + '">' + match + '</span>';
-                });
-            }
-  
-            
-        </script>
-
-    </head>
-    <body>
-
-
-
-        <div id="navigation">
-            <div class="logo">rpc.js</div>
-            <div id="menu"></div>
-        </div>
-
-        <div id="main">
-            <div class="testee"></div>
-        </div>
-
-
-
-
-        <script type="text/html" rows="0" cols="0" style="display:none;" id="tplMenu">
-            {#foreach $T.data.groups as group}
-<div style="margin-left:10px;">
-            <h2 style="margin-top: 25px;">{$T.group.name}</h2>
-            <div style="font-size: 11px;">{$T.group.info}</div>
-            <ul style="margin-top: 5px;">
-                {#foreach $T.data.methods as method}
-                {#if $T.group$key == $T.method.group} 
-                <li><a href="#{$T.method$key}">{$T.method$key} </a></li>
-                {#/if}
-                {#/for}
-            </ul>
+<div id="navigation">
+    <div class="logo">rpc.js</div>
+    <div id="menu"></div>
 </div>
+
+<div id="main">
+    <div class="testee"></div>
+</div>
+
+
+<script type="text/html" rows="0" cols="0" style="display:none;" id="tplMenu">
+    {#foreach $T.data.groups as group}
+    <div style="margin-left:10px;">
+        <h2 style="margin-top: 25px;">{$T.group.name}</h2>
+        <div style="font-size: 11px;">{$T.group.info}</div>
+        <ul style="margin-top: 5px;">
+            {#foreach $T.data.methods as method}
+                {#if $T.group$key == $T.method.group} 
+                    <li><a href="#{$T.method$key}">{$T.method$key} </a></li>
+                {#/if}
             {#/for}
-        </script>
+        </ul>
+    </div>
+    {#/for}
+</script>
 
 
+<script type="text/html" rows="0" cols="0" style="display:none;" id="tplFiltragem">
+   
+    {#foreach $T.data as method}
+    <a name="{$T.method$key}"></a>
+    <form action="{$T.method$key}" class="formMethod" id="form-{$T.method$key}">
 
-        <script type="text/html" rows="0" cols="0" style="display:none;" id="tplFiltragem">
-           
-            {#foreach $T.data as method}
-            <a name="{$T.method$key}"></a>
-            <div class="testDetails" id="testDetails-{$T.method$key}">
-                <h1>{$T.method$key}</h1>
-                <span class="info">{$T.method.info}</span>
+    <div class="testDetails" id="testDetails-{$T.method$key}">
+        <h1>{$T.method$key}</h1>
+        <span class="info">{$T.method.info}</span>
 
-                <h3 style="margin-top: 30px;">Arguments</h3>
-                <div style="m_argin: 10px;">
-                    <table>
-                        <tr>
-                            <td style=" font-weight: bold; background-color:#272822; color:white" >Param</td>
-                            <td style=" font-weight: bold; background-color:#272822; color:white" >Test value</td>
-                            <td style=" font-weight: bold; background-color:#272822; color:white" >Description</td>
-                        </tr>
-                        {#foreach $T.method.params as fields}
-                        <tr>
-                            <td style=" font-weight: bold;" >{$T.fields$key}</td>
-                            <td style="width:100px;"><input type="text" id="{$T.method$key}-{$T.fields$key}"  class="mini" placeholder="{$T.fields.type}" /></td>
-                            <td>{$T.fields.info}</td>
-                        </tr>
-                        {#else} 
-                        <tr>
-                            <td style="border: none;" >no arguments accepted</td>
-                        </tr>                        
-                        {#/for}          
-                    </table>
-                </div>
+        <h3 style="margin-top: 30px;">Arguments</h3>
+        <div>
+            <table>
+                <tr>
+                    <td style=" font-weight: bold; background-color:#272822; color:white" >Param</td>
+                    <td style=" font-weight: bold; background-color:#272822; color:white" >Test value</td>
+                    <td style=" font-weight: bold; background-color:#272822; color:white" >Description</td>
+                </tr>
+                {#foreach $T.method.params as fields}
+                <tr>
+                    <td style="font-weight: bold;" >{$T.fields$key}</td>
+                    <td style="width:100px;"><input type="text" id="{$T.fields$key}" class="mini" placeholder="{$T.fields.type}" /></td>
+                    <td>{$T.fields.info}</td>
+                </tr>
+                {#else} 
+                <tr>
+                    <td style="border: none;" >no arguments accepted</td>
+                </tr>                        
+                {#/for}          
+            </table>
+        </div>
 
-                    <input type="button" class="tryBt" style="width:100%; margin-top:10px;" onclick="methodTest('{$T.method$key}')" value="run interactive test" />
+        <input type="submit" class="tryBt" value="run interactive test" />                    
 
-                    <div style="display: none;" class="testArea">
-                    <h3>Server Response</h3>
-                    <div style=" margin-left:10px;">
-                        <h4>Response Body</h4>
-                        <div class="box2 testBody">
-
-                        </div>
-                        <h4>Status Code</h4>
-                        <div class="box2 testStatus"></div>
-                    </div>
-                    </div>
-
-                <h3>Example CLI request</h3>
-                <div s_tyle="margin: 10px;">
-                    <div class="testCurl box">{createCurl($T.method$key,$T.method.params)}</div>
-                </div>
-
+        <div style="display: none;" class="testArea">
+            <h3>Server Response</h3>
+            <div style=" margin-left:10px;">
+                <h4>Response Body</h4>
+                <div class="box2 testBody"></div>
+                <h4>Status Code</h4>
+                <div class="box2 testStatus"></div>
             </div>
+        </div>
+
+        <h3>Example CLI request</h3>
+        <div s_tyle="margin: 10px;">
+            <div class="testCurl box">{rpc.curlify($T.method$key,$T.method.params)}</div>
+        </div>
+
+    </div>
+    </form>
+
+    {#/for}
+</script>
+
+<script>
+
+// RPC.js browser helper
+var rpcClient = function () 
+{
+    var rpc = {}
+
+    rpc.input = function (method, params, cb)
+    {
+        var request = { method: method, params: params };
+
+        if (socketIO != false)
+        {
+            // Socket.io
+            socketIO.emit('rpc', request, function (data) {
+                cb(data, { status: '200', statusText: 'socket.io', original: request} );
+            });
+
+        } else {
+
+            // Ajax POST
+            $.ajax({
+                url: gateway,
+                type: "POST",
+                data: { "rpc": JSON.stringify(request) },
+                cacheBoolean: false,
+                complete: function(jqXHR,textStatus) {
+                    cb( JSON.parse(jqXHR.responseText), { status: jqXHR.status, statusText:jqXHR.statusText, original: request} );
+                }
+            });
+
+        }
+    };
+
+    // Create CURL command for the method+params+input            
+    rpc.curlify = function(method, params, input)
+    {
+        input = input || {};
+        var result = { method: method, params: {} };
+
+        for (i in params)
+            result.params[i] = input[i] || '';
+        
+        return "curl -i -X POST -d rpc='"+JSON.stringify(result)+"' "+gateway;
+    };
+
+    rpc.findGateway = function()
+    {
+        var apiGateway = document.createElement('a'); 
+        apiGateway.href = window.location.href;
+
+        return apiGateway.protocol+'//'+apiGateway.host+apiGateway.pathname+'/../';
+    };
+
+    var gateway = rpc.findGateway();
+
+    return rpc;
+};
 
 
-            {#/for}
+</script>
 
-        </script>
-
-
-    </body>
+</body>
 </html>

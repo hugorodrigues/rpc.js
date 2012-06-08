@@ -1,6 +1,6 @@
 /*
 	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-	rpc.js v0.1.0 - A simple JSON-RPC Api Server for nodeJS
+	rpc.js - A simple JSON-RPC Api Server for nodeJS
 	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 	https://github.com/hugorodrigues/rpc.js
 	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
