@@ -1,7 +1,7 @@
 {
   "name": "rpc.js",
   "description": "A simple JSON-RPC Api Server for nodeJS",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "author": "Hugo Rodrigues <correio@hugorodrigues.com>",
   "repository": {
     "type": "git",
