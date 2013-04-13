@@ -1,7 +1,7 @@
 {
   "name": "rpc.js",
   "description": "A simple JSON-RPC Api Server for nodeJS",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "author": "Hugo Rodrigues <correio@hugorodrigues.com>",
   "repository": {
     "type": "git",
@@ -10,6 +10,6 @@
   "keywords": ["webservice", "api", "rpc", "JSON-RPC", "JSON", "framework", "flatiron", "express"],
   "main": "./rpc",
   "dependencies": {
-    "socket.io": "latest"
+    "socket.io": "0.9.14"
   }  
 }
