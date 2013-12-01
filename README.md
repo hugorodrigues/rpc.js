@@ -187,23 +187,23 @@ Will Output: `{"jsonrpc":"2.0","result":15}`
 ## Examples
 rpc-js is very flexible and can be adapted to your needs. Check the /examples:
 
-[examples/servers/http.js](/hugorodrigues/rpc.js/blob/master/examples/servers/http.js) - Standalone HTTP server implementation. 
+[examples/servers/http.js](examples/servers/http.js) - Standalone HTTP server implementation. 
 
-[examples/servers/socketio.js](/hugorodrigues/rpc.js/blob/master/examples/servers/socketio.js) - Socket.Io Implementation. 
+[examples/servers/socketio.js](examples/servers/socketio.js) - Socket.Io Implementation. 
 
-[examples/servers/telnet.js](/hugorodrigues/rpc.js/blob/master/examples/servers/telnet.js) - Socket server Implementation. 
+[examples/servers/telnet.js](examples/servers/telnet.js) - Socket server Implementation. 
 
-[examples/dummy/index.js](/hugorodrigues/rpc.js/blob/master/examples/dummy/index.js) - This examples shows you how to use your api without any server. Is usefull when you need to access your api inside another nodejs application.
+[examples/dummy/index.js](examples/dummy/index.js) - This examples shows you how to use your api without any server. Is usefull when you need to access your api inside another nodejs application.
 
-[examples/express/index.js](/hugorodrigues/rpc.js/blob/master/examples/express/index.js) - Using your API in a expressJs Application
+[examples/express/index.js](examples/express/index.js) - Using your API in a expressJs Application
 
-[examples/flatiron/index.js](/hugorodrigues/rpc.js/blob/master/examples/flatiron/index.js) - Using your API in a flatiron Application
+[examples/flatiron/index.js](examples/flatiron/index.js) - Using your API in a flatiron Application
 
-[examples/multi-schema/index.js](/hugorodrigues/rpc.js/blob/master/examples/multi-schema/index.js) - Insted of having a large schema, you can divide your api code base in a class-like fashion, This example is suggested if you have a big api and/or prefer use multiple object files.
+[examples/multi-schema/index.js](examples/multi-schema/index.js) - Insted of having a large schema, you can divide your api code base in a class-like fashion, This example is suggested if you have a big api and/or prefer use multiple object files.
 
-[examples/multi-server/index.js](/hugorodrigues/rpc.js/blob/master/examples/multi-server/index.js) - Expose the same API in multiple http ports
+[examples/multi-server/index.js](examples/multi-server/index.js) - Expose the same API in multiple http ports
 
-[examples/multi-version/index.js](/hugorodrigues/rpc.js/blob/master/examples/multi-version/index.js) - Expose multiple versions of your API (/v1, /v2 etc...)
+[examples/multi-version/index.js](examples/multi-version/index.js) - Expose multiple versions of your API (/v1, /v2 etc...)
 
 
 
