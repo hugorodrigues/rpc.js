@@ -7,9 +7,18 @@
     "type": "git",
     "url": "https://hugorodrigues@github.com/hugorodrigues/rpc.js.git"
   },
-  "keywords": ["webservice", "api", "rpc", "JSON-RPC", "JSON", "framework", "flatiron", "express"],
+  "keywords": [
+    "webservice",
+    "api",
+    "rpc",
+    "JSON-RPC",
+    "JSON",
+    "framework",
+    "flatiron",
+    "express"
+  ],
   "main": "./rpc",
   "dependencies": {
-    "socket.io": "0.9.14"
-  }  
+    "socket.io": "~2.0.4"
+  }
 }
